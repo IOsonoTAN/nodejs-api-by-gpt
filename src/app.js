@@ -1,5 +1,6 @@
 const express = require('express');
 const employeeRoutes = require('./routes/employeeRoutes')
+const employeeCachedRoutes = require('./routes/employeeCachedRoutes')
 const { initDatabase } = require('./dbInit');
 const { initCacheDatabase } = require('./cacheInit');
 
@@ -13,6 +14,7 @@ async function startServer() {
     app.use(express.json());
 
     app.use('/api/employees', employeeRoutes());
+    app.use('/api/cached/employees', employeeCachedRoutes());
 
     // Start the server
     const PORT = process.env.PORT || 3000;

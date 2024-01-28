@@ -17,6 +17,7 @@ const generateMockEmployee = () => {
 
 // Function to insert mock employees into the database
 const insertMockEmployees = async (count, pool) => {
+  console.time('generateMockEmployee')
   const employees = Array.from({ length: count }, generateMockEmployee);
 
   try {
@@ -34,6 +35,7 @@ const insertMockEmployees = async (count, pool) => {
   } finally {
     // Close the connection pool
     pool.end();
+    console.timeEnd('generateMockEmployee')
   }
 };
 
@@ -43,6 +45,7 @@ const insertMockEmployees = async (count, pool) => {
   const { pool } = await initDatabase();
 
   // Change the value of 'employeeCount' to specify the number of mock employees to generate and insert
-  const employeeCount = 10;
+  // const employeeCount = 1000000;
+  const employeeCount = 1;
   insertMockEmployees(employeeCount, pool);
 })();

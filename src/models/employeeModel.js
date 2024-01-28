@@ -1,9 +1,11 @@
 // employeeModel.js
 const { pool } = require('../dbInit');
 
-const getAllEmployees = async () => {
+const getAllEmployees = async (page = 1, pageSize = 10) => {
   try {
-    const result = await pool.query('SELECT * FROM employees');
+    const offset = (page - 1) * pageSize;
+    const result = await pool.query('SELECT * FROM employees LIMIT $1 OFFSET $2', [pageSize, offset]);
+
     return result.rows;
   } catch (error) {
     throw error;
