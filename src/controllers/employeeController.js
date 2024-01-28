@@ -3,8 +3,12 @@ const EmployeeModel = require('../models/employeeModel');
 exports.getEmployees = async (req, res) => {
   try {
     const { page, pageSize } = req.query;
+    const filter = { ...req.query }
 
-    const employees = await EmployeeModel.getAllEmployees(page, pageSize);
+    delete filter.page
+    delete filter.pageSize
+
+    const employees = await EmployeeModel.getAllEmployees(page, pageSize, filter);
     return res.json(employees);
   } catch (error) {
     return res.status(500).json({ message: error.message });

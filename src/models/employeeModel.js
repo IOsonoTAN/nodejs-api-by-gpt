@@ -1,16 +1,32 @@
-// employeeModel.js
 const { pool } = require('../dbInit');
 
-const getAllEmployees = async (page = 1, pageSize = 10) => {
+const getAllEmployees = async (page = 1, pageSize = 10, filters = {}) => {
   try {
     const offset = (page - 1) * pageSize;
-    const result = await pool.query('SELECT * FROM employees LIMIT $1 OFFSET $2', [pageSize, offset]);
+    let queryString = 'SELECT * FROM employees';
+
+    const filterConditions = Object.keys(filters)
+      .map((key, index) => `${key} = $${index + 1}`)
+      .join(' AND ');
+
+    if (filterConditions) {
+      queryString += ` WHERE ${filterConditions}`;
+    }
+
+    queryString += ` LIMIT $${Object.keys(filters).length + 1} OFFSET $${Object.keys(filters).length + 2}`;
+
+    const values = Object.values(filters);
+    values.push(pageSize, offset);
+
+    const result = await pool.query(queryString, values);
 
     return result.rows;
   } catch (error) {
     throw error;
   }
 };
+
+
 
 const getById = async (id) => {
   try {
